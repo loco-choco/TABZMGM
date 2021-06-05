@@ -53,30 +53,11 @@ namespace TABZMoreGunsMod
 
 
                     HasThePatchHappened = true;
-                    AccessTools.StaticFieldRefAccess<string>(typeof(MainMenuHandler), "mVersionString") = "TABZ v1.21";
-                    try
-                    {
-                        FieldInfo f = AccessTools.Field(AccessTools.TypeByName("NetworkingPeer"), "PrefabCache");
-                        MagicCubeTest.PrefabCacheRef = AccessTools.StaticFieldRefAccess<Dictionary<string,GameObject>, Dictionary<string, GameObject>>(f);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.Log(ex.Message + " " + ex.Source + " " + ex.StackTrace);
-                    }
+                    
+                    AccessTools.StaticFieldRefAccess<string>(typeof(MainMenuHandler), "mVersionString") = "TABZ v1.21-MagicCubeTest";
+                    PhotonNetwork.Disconnect();
+                    PhotonNetwork.ConnectUsingSettings(MainMenuHandler.VERSION_NUMBER);
 
-
-                    if (PhotonNetwork.connected)
-                    {
-                        Debug.Log("Entrando com os nossos settings");
-                        PhotonNetwork.Disconnect();
-                        PhotonNetwork.ConnectUsingSettings("TABZ v1.21");
-                    }
-                    else
-                    {
-                        Debug.Log("Entrando com os nossos settings mesmo sem estar conectado ainda");
-                        PhotonNetwork.Disconnect();
-                        PhotonNetwork.ConnectUsingSettings("TABZ v1.21");
-                    }
                 }
                 catch (Exception ex)
                 {
@@ -86,18 +67,19 @@ namespace TABZMoreGunsMod
 
             if (Application.loadedLevel == 1)
             {
-                NetworkManager.MasterPhotonView.gameObject.AddComponent<MagicCubeTest>();
+                if(NetworkManager.MasterPhotonView.gameObject.GetComponent<MagicCubeTest>() == null)
+                    NetworkManager.MasterPhotonView.gameObject.AddComponent<MagicCubeTest>();
             }
-            else
-                Debug.Log("Version Type " + MainMenuHandler.VERSION_NUMBER);
+            
         }
         public static GameObject InstantiateGameObject(string prefabName)
         {
-            if (prefabName == "MagicCube")
-            {
-                var go = GameObject.Instantiate<GameObject>(MagicCubeTest.MagicCube);
-                go.GetComponent<PhotonView>().viewID = PhotonNetwork.AllocateViewID();
-                go.SetActive(true);
+            if (prefabName == "MagicCube") //For some reason this is the solution, no idea why we can't just return the magicCube param without creating a copy of it.
+            {                               // We can destroy it right after doe
+                var magicCube = MagicCubeTest.CreateMagicCube();
+                var go = UnityEngine.Object.Instantiate(magicCube);
+                GameObject.Destroy(magicCube);
+                GameObject.DontDestroyOnLoad(go);
                 return go;
             }
             return (GameObject)Resources.Load(prefabName, typeof(GameObject));
@@ -107,9 +89,9 @@ namespace TABZMoreGunsMod
         {
             if(prefab.name.Contains("MagicCube"))
             {
-                var go = GameObject.Instantiate<GameObject>(MagicCubeTest.MagicCube, position, rotation);
-                go.GetComponent<PhotonView>().viewID = PhotonNetwork.AllocateViewID();
+                var go = UnityEngine.Object.Instantiate(prefab, position, rotation);
                 go.SetActive(true);
+                go.GetComponent<PhotonView>().viewID = PhotonNetwork.AllocateViewID();
                 return go;
             }
             return UnityEngine.Object.Instantiate(prefab, position, rotation);
@@ -119,9 +101,9 @@ namespace TABZMoreGunsMod
         {
             if (prefabName == "MagicCube")
             {
-                var go = GameObject.Instantiate<GameObject>(MagicCubeTest.MagicCube, position, rotation);
-                go.GetComponent<PhotonView>().viewID = PhotonNetwork.AllocateViewID();
+                var go = objectPool.Instantiate(prefabName, position, rotation);
                 go.SetActive(true);
+                go.GetComponent<PhotonView>().viewID = PhotonNetwork.AllocateViewID();
                 return go;
             }
             return objectPool.Instantiate(prefabName,position,rotation);
