@@ -5,107 +5,123 @@ using System.Text;
 using UnityEngine;
 using TABZMoreGunsMod.RuntimeResources;
 using TABZMoreGunsMod.InventoryItemEditingHelper;
+using TABZMoreGunsMod.WeaponHandlerEditingHandler;
 using System.IO;
 
 namespace TABZMoreGunsMod
 {
     public class MagicCubeTest : MonoBehaviour
     {
-        private static bool hasCreatedCube = false;
-        private GameObject gun;
-        private Rigidbody rig;
-        public void Start()
+        static public void CreateWeapon()
         {
-            if (!hasCreatedCube)
-            {
-                var MagicCubeItem = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                MagicCubeItem.name = "MagicCubeItem";
-                MagicCubeItem.layer = LayerMask.NameToLayer("Item");
-                var pVItem = MagicCubeItem.AddComponent<PhotonView>();
-                //MagicCube.AddComponent<PhotonTransformView>();
-                var item = MagicCubeItem.AddComponent<InventoryItemWeapon>();
+            if (needleMesh == null)
+                needleMesh = new CAMOWA.ObjImporter().ImportFile("needle.obj");
 
-                //string path = Directory.GetFiles(Directory.GetCurrentDirectory(), "icon.png", SearchOption.AllDirectories)[0];
+            var MagicCubeItem = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            MagicCubeItem.GetComponent<MeshFilter>().mesh = needleMesh;
+            MagicCubeItem.GetComponent<MeshRenderer>().material.color = Color.grey;
+            MagicCubeItem.transform.localScale = Vector3.one / 2f;
+            MagicCubeItem.name = "MagicCubeItem";
+            MagicCubeItem.layer = LayerMask.NameToLayer("Item");
+            var pVItem = MagicCubeItem.AddComponent<PhotonView>();
+            //MagicCube.AddComponent<PhotonTransformView>();
+            var item = MagicCubeItem.AddComponent<InventoryItemWeapon>();
 
-                //Texture2D image = FileImporting.ImportImage(path);
+            string path = Directory.GetFiles(Directory.GetCurrentDirectory(), "icon.png", SearchOption.AllDirectories)[0];
 
-                InventoryItemEditing.DisplayNameRef(item) = "Ame";
-                InventoryItemEditing.FlavourTextRef(item) = "Hummmm Ahnnn \n Ame gun?!?!?";
-                //InventoryItemEditing.ItemIconRef(item) = Sprite.Create(image, new Rect(0.0f, 0.0f, image.width, image.height), new Vector2(0.5f, 0.5f), 100.0f);
-                InventoryItemEditing.ItemTypeRef(item) = InventoryService.ItemType.WEAPON;
-                RuntimeResourcesHandler.AddResource(pVItem, "MagicCubeItem");
-                WeaponHandler.WeaponWrapper wrapper = new WeaponHandler.WeaponWrapper();
-                wrapper.m_item = item;
-                wrapper.m_weapon = MakeMagicCube();
+            Texture2D image = FileImporting.ImportImage(path);
 
-               // gun.GetComponent<Renderer>().material.mainTexture = image;
-                WeaponHandlerEditingHelper.AddWeaponWraperToList(wrapper);
-                Debug.Log("Objects were created!");
-
-                hasCreatedCube = true;
-            }
-            rig = NetworkManager.LocalPlayerPhotonView.gameObject.GetComponent<PhysicsAmimationController>().mainRig;
+            InventoryItemEditing.DisplayNameRef(item) = "Needle";
+            InventoryItemEditing.FlavourTextRef(item) = "<b>Wishlist\n<color=orange>Straight To The Point</color></b>";
+            InventoryItemEditing.ItemIconRef(item) = Sprite.Create(image, new Rect(0.0f, 0.0f, image.width, image.height), new Vector2(0.5f, 0.5f), 100.0f);
+            InventoryItemEditing.ItemTypeRef(item) = InventoryService.ItemType.WEAPON;
+            InventoryItemEditing.AmmoTypeRef(item) = InventoryService.AmmoType.Big;
+            RuntimeResourcesHandler.AddResource(pVItem, "MagicCubeItem");
+            
+            WeaponHandlerEditingHelper.AddWeaponToList("Needle", MakeMagicCube);
+            Debug.Log("Objects were created!");
         }
 
         void Update()
         {
-            
+
             if (Input.GetKeyUp(KeyCode.N))
             {
                 Debug.Log("Spwning Magic Cube");
-                PhotonNetwork.Instantiate("MagicCubeItem", rig.position, Quaternion.identity, 0, new object[] { 200 });
+                PhotonNetwork.Instantiate("MagicCubeItem", NetworkManager.LocalPlayerPhotonView.gameObject.GetComponent<PhysicsAmimationController>().mainRig.position, Quaternion.identity, 0, new object[] { 200 });
             }
-
-            if (gun.transform.parent != rig.transform)
-                gun.transform.parent = rig.transform;
         }
-        
 
-        private Weapon MakeMagicCube()
+        private static Mesh needleMesh;
+        static public Weapon MakeMagicCube(Transform playerTransform)
         {
             try
             {
                 //Weapon
-                var MagicCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                MagicCube.AddComponent<Rigidbody>();
-                MagicCube.name = "Ame"; //Needs to be the same name as the DisplayName in the item
+                var MagicCube = new GameObject("Needle"); //Needs to be the same name as the DisplayName in the item
+                MagicCube.AddComponent<Rigidbody>().angularDrag = 0.05f;
+                MagicCube.transform.parent = playerTransform;
+                MagicCube.transform.localPosition = new Vector3(0f, 1.52f, -0.88f);
+
                 var pV = MagicCube.AddComponent<PhotonView>();
-                pV.viewID = PhotonNetwork.AllocateViewID();
-                //MagicCube.AddComponent<PhotonTransformView>();
-                MagicCube.AddComponent<MeleeWeapon>(); //Dunno if this is helping
+                pV.instantiationId = -1;
+                pV.currentMasterID = -1;
+                pV.synchronization = ViewSynchronization.Off;
+                pV.prefixBackup = -1;
+                pV.onSerializeRigidBodyOption = OnSerializeRigidBody.All;
+                pV.onSerializeTransformOption = OnSerializeTransform.PositionAndRotation;
+                pV.viewID = 0;
+				pV.ownerId = playerTransform.GetComponent<PhotonView>().ownerId;
+                MagicCube.AddComponent<MeleeWeapon>();
                 //Firepoint
-                GameObject firePoint = new GameObject("FirePoint", typeof(FirePoint));
-                firePoint.transform.parent = MagicCube.transform;
-                firePoint.transform.localPosition = Vector3.zero;
+                //GameObject firePoint = new GameObject("FirePoint", typeof(FirePoint));
+                //firePoint.transform.parent = MagicCube.transform;
+                //firePoint.transform.localPosition = Vector3.zero;
                 //ADS
-                GameObject ads = new GameObject("ADS_Position",typeof(ADS));
-                ads.transform.parent = MagicCube.transform;
-                ads.transform.localPosition = Vector3.zero;
+                //GameObject ads = new GameObject("ADS_Position", typeof(ADS));
+                //ads.transform.parent = MagicCube.transform;
+                //ads.transform.localPosition = Vector3.zero;
+
                 // WeaponRightHand
                 GameObject weaponRightHand = new GameObject("WeaponRightHand", typeof(WeaponRightHandTag));
                 weaponRightHand.transform.parent = MagicCube.transform;
                 weaponRightHand.transform.localPosition = Vector3.zero;
-                ////Sound Event didn't work :/
-                //var soundManager = GameObject.FindObjectOfType<SoundEventsManager>(); 
-                //var r = HarmonyLib.AccessTools.FieldRefAccess<SoundEventsManager, SoundEventsManager.WeaponSound[]>(soundManager, "m_Weapons");
-                //var wr = r[0]; 
-                //wr.WeaponName = MagicCube;
-                //var l = r.ToList();
-                //l.Add(wr);
-                //r = l.ToArray();
 
-                MagicCube.transform.parent = GameObject.FindObjectOfType<NetworkConnector>().transform;
-                MagicCube.transform.localPosition = Vector3.zero;
+
                 MagicCube.AddComponent<CenterOfMass>();
                 var weapon = MagicCube.AddComponent<Weapon>();
+                weapon.punchCurve = AnimationCurve.Linear(0f, 1f, 2f, 0f);
+                weapon.punchForce = 2000f;
+                weapon.punchTime = 0.2f;
                 weapon.melee = true;
                 HarmonyLib.AccessTools.FieldRefAccess<Weapon, bool>(weapon, "mIsMelee") = true;
-                weapon.aimTarget = firePoint.transform;
-                gun = weapon.gameObject;
-                //RuntimeResourcesHandler.AddResource(pV, "MagicCube"); don't need to add it into the resources thing, or maybe we need
+                weapon.aimTarget = playerTransform.Find("Knige").GetComponent<Weapon>().aimTarget;
+
+
+                //Weapon collider and mesh
+                GameObject collider = new GameObject("Collider", typeof(BoxCollider));
+                collider.GetComponent<BoxCollider>().size = new Vector3(0.3f, 1f, 6f);
+                collider.transform.parent = MagicCube.transform;
+                GameObject mesh = new GameObject("Mesh", typeof(MeshFilter), typeof(MeshRenderer));
+
+                mesh.GetComponent<MeshFilter>().mesh = needleMesh;
+                var render = mesh.GetComponent<MeshRenderer>();
+                render.material = new Material(Shader.Find("Standard"));
+                render.material.color = Color.grey;
+
+                mesh.transform.parent = MagicCube.transform;
+
+
+
+                mesh.transform.localPosition = Vector3.zero;
+                collider.transform.localPosition = Vector3.zero;
+                mesh.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
+                collider.transform.localEulerAngles = new Vector3(90f, 0f, 0f);
+
+                MagicCube.transform.localScale = Vector3.one / 2;
                 return weapon;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Debug.Log(ex.Message);
                 Debug.Log(ex.Source);

@@ -28,6 +28,7 @@ namespace TABZMoreGunsMod.RuntimeResources
             photonView.viewID = 0;
             photonView.gameObject.AddComponent<RuntimeResourcesTag>();
             photonView.gameObject.SetActive(false);
+            GameObject.DontDestroyOnLoad(photonView.gameObject);
             RuntimeResources.Add(name, photonView);
             return true;
         }
@@ -35,15 +36,24 @@ namespace TABZMoreGunsMod.RuntimeResources
         
         public static GameObject InstantiateGameObject(string prefabName)
         {
-            if (RuntimeResources.ContainsKey(prefabName)) //For some reason this is the solution, no idea why we can't just return the magicCube param without creating a copy of it.
-            {                               // We can destroy it right after doe
-                var go = UnityEngine.Object.Instantiate(RuntimeResources[prefabName].gameObject);
-                GameObject.Destroy(RuntimeResources[prefabName].gameObject);
-                GameObject.DontDestroyOnLoad(go);
-                RuntimeResources[prefabName] = null;
-                return go;
+            try
+            {
+                if (RuntimeResources.ContainsKey(prefabName)) //For some reason this is the solution, no idea why we can't just return the magicCube param without creating a copy of it.
+                {                               // We can destroy it right after doe
+                    var go = UnityEngine.Object.Instantiate(RuntimeResources[prefabName].gameObject);
+                    //GameObject.Destroy(RuntimeResources[prefabName].gameObject);
+                    GameObject.DontDestroyOnLoad(go);
+                    RuntimeResources[prefabName] = null;
+                    return go;
+                }
+
+                return (GameObject)Resources.Load(prefabName, typeof(GameObject));
             }
-            return (GameObject)Resources.Load(prefabName, typeof(GameObject));
+            catch
+            {
+                Debug.Log("Nao deu para instanciar " + prefabName);
+                return null;
+            }
         }
 
         public static GameObject ShallowCopyFrom(GameObject prefab, Vector3 position, Quaternion rotation)

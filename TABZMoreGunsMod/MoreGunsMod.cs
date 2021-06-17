@@ -8,6 +8,7 @@ using UnityEngine;
 using CAMOWA;
 using HarmonyLib;
 using TABZMoreGunsMod.RuntimeResources;
+using TABZMoreGunsMod.WeaponHandlerEditingHandler;
 
 namespace TABZMoreGunsMod
 {
@@ -32,10 +33,13 @@ namespace TABZMoreGunsMod
                 try
                 {
                     ResourceHandlerPatches.Patches(harmonyInstance);
+                    WeaponHandlerEditingPatches.Patches(harmonyInstance);
                     HasThePatchHappened = true;
                     AccessTools.StaticFieldRefAccess<string>(typeof(MainMenuHandler), "mVersionString") = "TABZ v1.21-MagicCubeTest";
                     PhotonNetwork.Disconnect();
                     PhotonNetwork.ConnectUsingSettings(MainMenuHandler.VERSION_NUMBER);
+
+                    MagicCubeTest.CreateWeapon();
 
                 }
                 catch (Exception ex)

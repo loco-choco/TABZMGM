@@ -26,5 +26,10 @@ namespace TABZMoreGunsMod.InventoryItemEditingHelper
         {
             return ref AccessTools.FieldRefAccess<InventoryItem, Sprite>(item, "m_itemIcon");
         }
+
+        static public ref InventoryService.AmmoType AmmoTypeRef(InventoryItemWeapon item)
+        {
+            return ref AccessTools.FieldRefAccess<InventoryItemWeapon, InventoryService.AmmoType>(item, "m_ammoType");
+        }
     }
 }
