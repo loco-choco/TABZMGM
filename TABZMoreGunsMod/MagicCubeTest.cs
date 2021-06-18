@@ -14,9 +14,15 @@ namespace TABZMoreGunsMod
     {
         static public void CreateWeapon()
         {
-            if (needleMesh == null)
-                needleMesh = new CAMOWA.ObjImporter().ImportFile("needle.obj");
-
+            try
+            {
+                if (needleMesh == null)
+                    needleMesh = new CAMOWA.ObjImporter().ImportFile(Directory.GetFiles(Application.dataPath, "needle.obj", SearchOption.AllDirectories)[0]);
+            }
+            catch
+            {
+                Debug.Log("Couldn't load the mesh needle.obj, make sure that it is inside the game folder");
+            }
             var MagicCubeItem = GameObject.CreatePrimitive(PrimitiveType.Cube);
             MagicCubeItem.GetComponent<MeshFilter>().mesh = needleMesh;
             MagicCubeItem.GetComponent<MeshRenderer>().material.color = Color.grey;
@@ -27,8 +33,15 @@ namespace TABZMoreGunsMod
             //MagicCube.AddComponent<PhotonTransformView>();
             var item = MagicCubeItem.AddComponent<InventoryItemWeapon>();
 
-            string path = Directory.GetFiles(Directory.GetCurrentDirectory(), "icon.png", SearchOption.AllDirectories)[0];
-
+            string path = "";
+            try
+            {
+                path = Directory.GetFiles(Application.dataPath, "icon.png", SearchOption.AllDirectories)[0];
+            }
+            catch
+            {
+                Debug.Log("Couldn't load the image icon.png, make sure that it is inside the game folder");
+            }
             Texture2D image = FileImporting.ImportImage(path);
 
             InventoryItemEditing.DisplayNameRef(item) = "Needle";
@@ -106,8 +119,10 @@ namespace TABZMoreGunsMod
 
                 mesh.GetComponent<MeshFilter>().mesh = needleMesh;
                 var render = mesh.GetComponent<MeshRenderer>();
-                render.material = new Material(Shader.Find("Standard"));
-                render.material.color = Color.grey;
+                render.material = new Material(Shader.Find("Standard"))
+                {
+                    color = Color.grey
+                };
 
                 mesh.transform.parent = MagicCube.transform;
 

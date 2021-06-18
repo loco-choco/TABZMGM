@@ -30,7 +30,6 @@ namespace TABZMoreGunsMod.WeaponHandlerEditingHandler
                 {
                     Weapon weapon = weaponsToAdd[i].WeaponSpawningMethod(__instance.transform);
                     weapon.gameObject.SetActive(false);
-                    //weapon.GetComponent<PhotonView>().viewID = PhotonNetwork.AllocateViewID(); < fonte do problema, não é assim que é sincronizado entre players >:(
                     weaponsWrappers[i] = new WeaponHandler.WeaponWrapper
                     {
                         m_item = weaponsToAdd[i].Item,

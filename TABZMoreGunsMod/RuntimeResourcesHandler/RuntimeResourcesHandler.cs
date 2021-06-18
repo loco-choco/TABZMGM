@@ -39,11 +39,11 @@ namespace TABZMoreGunsMod.RuntimeResources
             try
             {
                 if (RuntimeResources.ContainsKey(prefabName)) //For some reason this is the solution, no idea why we can't just return the magicCube param without creating a copy of it.
-                {                               // We can destroy it right after doe
+                {                               // We can destroy it right after doe (actually we can't, strange stuff happens when we do that)
                     var go = UnityEngine.Object.Instantiate(RuntimeResources[prefabName].gameObject);
                     //GameObject.Destroy(RuntimeResources[prefabName].gameObject);
                     GameObject.DontDestroyOnLoad(go);
-                    RuntimeResources[prefabName] = null;
+                    //RuntimeResources[prefabName] = null;
                     return go;
                 }
 
@@ -51,7 +51,7 @@ namespace TABZMoreGunsMod.RuntimeResources
             }
             catch
             {
-                Debug.Log("Nao deu para instanciar " + prefabName);
+                Debug.Log("Couldn't instantiate " + prefabName);
                 return null;
             }
         }
