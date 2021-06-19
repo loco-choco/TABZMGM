@@ -34,6 +34,11 @@ namespace TABZMoreGunsMod.RuntimeResources
         }
         
         
+        /// <summary>
+        /// Same as doing Resources.Load() and casting to GameObject, but adds the pool of runtime added objects.
+        /// </summary>
+        /// <param name="prefabName"></param>
+        /// <returns></returns>
         public static GameObject InstantiateGameObject(string prefabName)
         {
             try

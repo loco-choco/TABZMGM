@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace TABZMoreGunsMod.WeaponHandlerEditingHandler
 {
+    //TODO
+    // - Add this list to the SoundEventsManager
     public class WeaponHandlerEditingHelper
     {
         static public List<WeaponWeapperResourcesNames> weaponsToAdd = new List<WeaponWeapperResourcesNames>();

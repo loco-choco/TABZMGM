@@ -62,6 +62,10 @@
     <Compile Include="RuntimeResourcesHandler\RuntimeResourcesPatches.cs" />
     <Compile Include="WeaponHandlerEditingHandler\WeaponHandlerEditingPatches.cs" />
     <Compile Include="WeaponHandlerEditingHandler\WeaponHandlerEditingHelper.cs" />
+    <Compile Include="WeaponMakerHelper\FireWeaponMakerHelper.cs" />
+    <Compile Include="WeaponMakerHelper\MeleeMakerHelper.cs" />
+    <Compile Include="WeaponMakerHelper\ItemWeaponMakerHelper.cs" />
+    <Compile Include="WeaponMakerHelper\WeaponEditing.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
