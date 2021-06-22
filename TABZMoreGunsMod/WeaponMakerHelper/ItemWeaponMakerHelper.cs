@@ -25,7 +25,7 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             NewItem.name = settings.DisplayName+"Item";
             NewItem.layer = LayerMask.NameToLayer("Item");
 
-            PhotonView pVItem = NewItem.AddComponent<PhotonView>();
+            NewItem.AddComponent<PhotonView>();
             InventoryItemWeapon itemComponent = NewItem.AddComponent<InventoryItemWeapon>();
 
             InventoryItemEditing.DisplayNameRef(itemComponent) = settings.DisplayName;
@@ -35,6 +35,7 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
 
             InventoryItemEditing.ItemTypeRef(itemComponent) = InventoryService.ItemType.WEAPON;
             InventoryItemEditing.AmmoTypeRef(itemComponent) = settings.AmmoType;
+            itemComponent.BulletsInMagazine = settings.BulletsInMagazine;
 
             return itemComponent;
         }
@@ -47,5 +48,6 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
         public InventoryService.AmmoType AmmoType;
         public Mesh ItemMesh;
         public Material ItemMaterial;
+        public int BulletsInMagazine;
     }
 }

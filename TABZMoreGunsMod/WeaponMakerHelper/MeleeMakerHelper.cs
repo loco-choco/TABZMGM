@@ -51,19 +51,34 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
 
             MeleeWeapon.AddComponent<CenterOfMass>();
             var weapon = MeleeWeapon.AddComponent<Weapon>();
+
+            weapon.fov = settings.FOV;
+
             weapon.punchCurve = settings.PunchCurve;
             weapon.punchForce = settings.PunchForce;
             weapon.punchTime = settings.PunchTime;
             weapon.punchRate = settings.PunchRate;
             weapon.melee = true;
             HarmonyLib.AccessTools.FieldRefAccess<Weapon, bool>(weapon, "mIsMelee") = true;
-            weapon.aimTarget = playerTransform.Find("CameraHolder/CameraRot/CameraForce/Aims/Melee"); //Change to .Find("[...]....\....\Melee")
+            weapon.aimTarget = playerTransform.Find("CameraHolder/CameraRot/CameraForce/Aims/Melee");
 
 
-            //Weapon collider and mesh
-            GameObject collider = new GameObject("Collider", typeof(BoxCollider));
-            collider.GetComponent<BoxCollider>().size = settings.BoxColliderSize;
-            collider.transform.parent = MeleeWeapon.transform;
+            //Weapon colliders
+            GameObject colliders = new GameObject("Colliders");
+            colliders.transform.parent = MeleeWeapon.transform;
+
+            for (int i = 0; i < settings.BoxColliders.Length; i++)
+            {
+                GameObject collider = new GameObject("Collider" + i, typeof(BoxCollider));
+                var bxCol = collider.GetComponent<BoxCollider>();
+
+                collider.transform.parent = colliders.transform;
+
+                bxCol.transform.localPosition = settings.BoxColliders[i].Position;
+                bxCol.transform.localEulerAngles = settings.BoxColliders[i].Rotation;
+                bxCol.transform.localScale = settings.BoxColliders[i].Scale;
+            }
+            //Mesh
             GameObject mesh = new GameObject("Mesh", typeof(MeshFilter), typeof(MeshRenderer));
 
             mesh.GetComponent<MeshFilter>().mesh = settings.WeaponMesh;
@@ -71,9 +86,10 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
 
             mesh.transform.parent = MeleeWeapon.transform;
 
-            mesh.transform.localRotation = settings.ColliderAndMeshAngle;
-            collider.transform.localRotation = settings.ColliderAndMeshAngle;
-            
+            mesh.transform.localPosition = settings.MeshTransform.Position;
+            mesh.transform.localEulerAngles = settings.MeshTransform.Rotation;
+            mesh.transform.localScale = settings.MeshTransform.Scale;
+
             MeleeWeapon.transform.localPosition = new Vector3(0f, 1.52f, -0.88f); //Pos. of weapons in game
 
             return weapon;
@@ -94,13 +110,14 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
         public bool IsTwoHandedWeapon;
         public Vector3 WeaponLeftHand_Position;
 
+        public float FOV;
         public AnimationCurve PunchCurve;
         public float PunchForce;
         public float PunchTime;
         public float PunchRate;
 
-        public Vector3 BoxColliderSize;
-        public Quaternion ColliderAndMeshAngle;
+        public TransformSettings[] BoxColliders;
+        public TransformSettings MeshTransform;
 
         public float NoiseInterval;
         public float NoiseLoudness;

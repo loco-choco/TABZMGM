@@ -56,7 +56,10 @@
     <Compile Include="InventoryItemEditingHelper\InventoryItemEditingHelper.cs" />
     <Compile Include="MagicCubeTest.cs" />
     <Compile Include="MoreGunsMod.cs" />
-    <Compile Include="ConfigInfo.cs" />
+    <Compile Include="RuntimeGeneratedWeapon.cs" />
+    <Compile Include="SerializabeStructs\CustomWeaponProjectileSettings .cs" />
+    <Compile Include="SerializabeStructs\CustomFireWeaponSettings .cs" />
+    <Compile Include="SerializabeStructs\CustomMeleeSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RuntimeResourcesHandler\RuntimeResourcesHandler.cs" />
     <Compile Include="RuntimeResourcesHandler\RuntimeResourcesPatches.cs" />
@@ -66,6 +69,7 @@
     <Compile Include="WeaponMakerHelper\MeleeMakerHelper.cs" />
     <Compile Include="WeaponMakerHelper\ItemWeaponMakerHelper.cs" />
     <Compile Include="WeaponMakerHelper\WeaponEditing.cs" />
+    <Compile Include="WeaponMakerHelper\WeaponProjectileMakerHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

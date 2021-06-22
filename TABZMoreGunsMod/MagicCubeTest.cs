@@ -46,7 +46,8 @@ namespace TABZMoreGunsMod
                 },
                 ItemMesh = needleMesh,
                 ItemIcon = image,
-                AmmoType = InventoryService.AmmoType.Small
+                AmmoType = InventoryService.AmmoType.Small,
+                BulletsInMagazine = 2000
             };
             var MagicCubeItem = ItemWeaponMakerHelper.MakeItemWeapon(itemSettings);
             MagicCubeItem.transform.localScale = Vector3.one / 2f;
@@ -59,12 +60,26 @@ namespace TABZMoreGunsMod
             //    {
             //        color = Color.grey
             //    },
+            //    FOV = 70,
             //    PunchCurve = AnimationCurve.Linear(0f, 1f, 2f, 0f),
             //    PunchForce = 2000f,
             //    PunchTime = 0.1f,
             //    PunchRate = 1f,
-            //    BoxColliderSize = new Vector3(0.3f, 1f, 6f),
-            //    ColliderAndMeshAngle = Quaternion.Euler(60f, 0f, 0f),
+            //    BoxColliders = new TransformSettings[] {
+            //        new TransformSettings()
+            //        {
+            //            Position = Vector3.zero,
+            //            Rotation = new Vector3(60f, 0f, 0f),
+            //            Scale = new Vector3(0.3f, 1f, 6f)
+            //        }
+            //    },
+
+            //    MeshTransform = new TransformSettings()
+            //    {
+            //        Position = Vector3.zero,
+            //        Rotation = new Vector3(60f, 0f, 0f),
+            //        Scale = Vector3.one
+            //    },
 
             //    MeleeMultiplier = 1f,
             //    MeleeWeaponMultiplier = 1f,
@@ -74,38 +89,73 @@ namespace TABZMoreGunsMod
             //    NoiseHearableDistance = 50f,
             //    NoiseLoudness = 0.3f,
             //};
+            var ProjectileWeaponSettings = new WeaponProjectileSettings()
+            {
+                BulletLifeTime = 60f,
+                Damage = 10f,
+                Force = 100f,
+                ProjectilyTypeToBeBasedOn = ProjectileTypes.Bullet_Sniper,
+                //HitEffect = ProjectileHitEffects.MusketHitEffect, //broken?
+                RayLenght = 2f,
+                InitialFowardsForce = 5f,
+                //InitialUpwardsForce = 15f
+            };
+            var Projectile = WeaponProjectileMakerHelper.MakeProjectile(ProjectileWeaponSettings);
+            Projectile.name = "AAAAAAAAA";
+            RuntimeResourcesHandler.AddNonNetworkedResource(Projectile, Projectile.name);
 
-            WeaponFireSettings =  new FireWeaponSettings()
+            WeaponFireSettings = new FireWeaponSettings()
             {
                 Name = "Needle",
                 WeaponMesh = needleMesh,
                 WeaponMaterial = new Material(Shader.Find("Standard"))
                 {
-                    color = Color.grey
+                    color = Color.grey,
+                    
                 },
-                Automatic = false,
+                Automatic = true,
+                Recoil = -Vector3.forward*10000f,
                 ADS_Position = -Vector3.forward / 2f,
-                WeaponProjectileType = ProjectileType.Bullet_Big,
-                MagazineSize = 2,
-                FirePoint_Position = Vector3.forward * 3f,
+                WeaponProjectile = Projectile.name,
+                MagazineSize = 1000,
+                FirePoint_Position = Vector3.forward / 4f,
                 FOV = 60,
-                FireRate = 1f,
-                ReloadTime = 0.01f,
+                FireRate = 0.5f,
+                ReloadTime = 10f,
 
-                BoxColliderSize = Vector3.one / 10f,
-                ColliderAndMeshAngle = Quaternion.Euler(60f, 0f, 0f),
+                BoxColliders = new TransformSettings[]{
+                    new TransformSettings()
+                    {
+                        Position = Vector3.zero,
+                        Rotation = Vector3.zero,
+                        Scale = Vector3.one
+                    }
+                },
+
+                MeshTransform = new TransformSettings()
+                {
+                    Position = Vector3.zero,
+                    Rotation = Vector3.zero,
+                    Scale = Vector3.one / 10f
+                },
 
                 WeaponRightHand_Position = Vector3.zero,
                 IsTwoHandedWeapon = false,
 
                 NoiseInterval = 0f,
-                NoiseHearableDistance = 50f,
-                NoiseLoudness = 0.3f,
+                NoiseHearableDistance = 200f,
+                NoiseLoudness = 100f,
+            };
+            SoundEventsManager.WeaponSoundWrapper WeaponSounds = new SoundEventsManager.WeaponSoundWrapper()
+            {
+                WeaponEvent = NoiseWeaponEvents.RifleMusket,
+                HitEvent = NoiseWeaponHitEvents.SMallHit,
+                ReloadEvent = NoiseWeaponReloadEvents.GenericReload
             };
 
             RuntimeResourcesHandler.AddResource(MagicCubeItem.GetComponent<PhotonView>(), "MagicCubeItem");
 
-            WeaponHandlerEditingHelper.AddWeaponToList("Needle", MakeMagicCube);
+            WeaponHandlerEditingHelper.AddWeaponToList("Needle", WeaponSounds, MakeMagicCube);
             Debug.Log("Objects were created!");
         }
 

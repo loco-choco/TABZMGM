@@ -14,13 +14,19 @@ namespace TABZMoreGunsMod.WeaponHandlerEditingHandler
         {
             var WeaponHandlerStart = AccessTools.Method(typeof(WeaponHandler), "Start");
 
-            var postfix = new HarmonyMethod(typeof(WeaponHandlerEditingPatches).GetMethod(nameof(WeaponHandlerEditingPatches.Postfix)));
+            var WH_postfix = new HarmonyMethod(typeof(WeaponHandlerEditingPatches).GetMethod(nameof(WeaponHandlerEditingPatches.WeaponHandlerStart_Postfix)));
 
-            harmonyInstance.Patch(WeaponHandlerStart, postfix: postfix);
+            harmonyInstance.Patch(WeaponHandlerStart, postfix: WH_postfix);
         }
-
-        public static void Postfix(WeaponHandler __instance)
+        static public bool loadedCustomSounds = false;
+        public static void WeaponHandlerStart_Postfix(WeaponHandler __instance)
         {
+            if (!loadedCustomSounds)
+            {
+                WeaponHandlerEditingHelper.LoadCustomGunSoundsToManager();
+                loadedCustomSounds = true;
+            }
+
             Debug.Log("Loading Custom Weapons");
             var weaponsToAdd = WeaponHandlerEditingHelper.weaponsToAdd;
             var weaponsWrappers = new WeaponHandler.WeaponWrapper[weaponsToAdd.Count];

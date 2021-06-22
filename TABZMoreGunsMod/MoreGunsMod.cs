@@ -24,6 +24,18 @@ namespace TABZMoreGunsMod
     public class MoreGunsMod
     {
         private static bool HasThePatchHappened = false;
+        private static string gamePath;
+        public static string GameExecutabePath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(gamePath))
+                    gamePath = Application.dataPath.Remove(Application.dataPath.LastIndexOf('/'));
+                return gamePath;
+            }
+
+            private set { }
+        }
         [IMOWAModInnit("More Guns Mod", -1, 1)]
         static public void ModInnit(string startingPoint)
         {
@@ -41,6 +53,13 @@ namespace TABZMoreGunsMod
 
                     MagicCubeTest.CreateWeapon();
 
+                    var FireWeaponJsonPaths = Directory.GetFiles(GameExecutabePath, "_FireWeapon.json",SearchOption.AllDirectories);
+                    var MeleeWeaponJsonPaths = Directory.GetFiles(GameExecutabePath, "_MeleeWeapon.json", SearchOption.AllDirectories);
+                    var WeaponProjectileJsonPaths = Directory.GetFiles(GameExecutabePath, "_WeaponProjectile.json", SearchOption.AllDirectories);
+
+                    new CustomWeaponProjectileSettings().ToJsonFile(GameExecutabePath);
+                    new CustomFireWeaponSettings().ToJsonFile(GameExecutabePath);
+                    new CustomMeleeSettings().ToJsonFile(GameExecutabePath);
                 }
                 catch (Exception ex)
                 {
@@ -50,7 +69,9 @@ namespace TABZMoreGunsMod
 
             if (Application.loadedLevel == 1)
             {
-                if(NetworkManager.MasterPhotonView.gameObject.GetComponent<MagicCubeTest>() == null)
+                WeaponHandlerEditingPatches.loadedCustomSounds = false;
+
+                if (NetworkManager.MasterPhotonView.gameObject.GetComponent<MagicCubeTest>() == null)
                     NetworkManager.MasterPhotonView.gameObject.AddComponent<MagicCubeTest>();
             }
         }

@@ -23,9 +23,10 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             pV.prefixBackup = -1;
             pV.onSerializeRigidBodyOption = OnSerializeRigidBody.All;
             pV.onSerializeTransformOption = OnSerializeTransform.PositionAndRotation;
-            pV.viewID = 0;
+            pV.viewID = PhotonNetwork.AllocateViewID(); //Not the correct solution, but setting it to 0 isn't right either
 
-            pV.ownerId = playerTransform.GetComponent<PhotonView>().ownerId;
+            if (playerTransform.GetComponent<PhotonView>().ownerId != NetworkManager.LocalPlayerPhotonView.ownerId)
+                pV.TransferOwnership(playerTransform.GetComponent<PhotonView>().ownerId);
 
             //NoiseSpawner
             var noiseSpawn = FireWeapon.AddComponent<NoiseSpawner>();
@@ -37,11 +38,13 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             GameObject adsPos = new GameObject("ADS_Position", typeof(ADS));
             adsPos.transform.parent = FireWeapon.transform;
             adsPos.transform.localPosition = settings.ADS_Position;
+            adsPos.transform.localEulerAngles = settings.ADS_Rotation;
 
             //FirePoint
             GameObject firePoint = new GameObject("FirePoint", typeof(FirePoint));
             firePoint.transform.parent = FireWeapon.transform;
             firePoint.transform.localPosition = settings.FirePoint_Position;
+            firePoint.transform.localEulerAngles = settings.FirePoint_Rotation;
 
             // WeaponRightHand
             GameObject weaponRightHand = new GameObject("WeaponRightHand", typeof(WeaponRightHandTag));
@@ -67,11 +70,8 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             weapon.angularRecoil = settings.AngularRecoil;
             weapon.forceShake = settings.ForceShake;
             weapon.forceShakeTime = settings.ForceShakeTime;
-
-            string projectilePrefabName = GetPrefabNameFromType(settings.WeaponProjectileType);
-            if (projectilePrefabName == "")
-                projectilePrefabName = settings.CustomProjectileResourceName;
-            weapon.projectile = RuntimeResources.RuntimeResourcesHandler.InstantiateGameObject(projectilePrefabName);
+            
+            weapon.projectile = RuntimeResources.RuntimeResourcesHandler.InstantiateGameObject(settings.WeaponProjectile);
 
             if(settings.IsTwoHandedWeapon)
                 weapon.aimTarget = playerTransform.Find("CameraHolder/CameraRot/CameraForce/Aims/Rifle");
@@ -79,74 +79,35 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
                 weapon.aimTarget = playerTransform.Find("CameraHolder/CameraRot/CameraForce/Aims/Pistol");
 
 
-            //Weapon collider and mesh
-            GameObject collider = new GameObject("Collider", typeof(BoxCollider));
-            collider.GetComponent<BoxCollider>().size = settings.BoxColliderSize;
-            collider.transform.parent = FireWeapon.transform;
+            //Weapon colliders
+            GameObject colliders = new GameObject("Colliders");
+            colliders.transform.parent = FireWeapon.transform;
+            for (int i = 0; i < settings.BoxColliders.Length; i++)
+            {
+                GameObject collider = new GameObject("Collider"+ i, typeof(BoxCollider));
+                var bxCol = collider.GetComponent<BoxCollider>();
+                collider.transform.parent = colliders.transform;
+
+                bxCol.transform.localPosition = settings.BoxColliders[i].Position;
+                bxCol.transform.localEulerAngles = settings.BoxColliders[i].Rotation;
+                bxCol.transform.localScale = settings.BoxColliders[i].Scale;
+            }
+            //Mesh
             GameObject mesh = new GameObject("Mesh", typeof(MeshFilter), typeof(MeshRenderer));
 
             mesh.GetComponent<MeshFilter>().mesh = settings.WeaponMesh;
             mesh.GetComponent<MeshRenderer>().material = settings.WeaponMaterial;
 
             mesh.transform.parent = FireWeapon.transform;
-
-            mesh.transform.localRotation = settings.ColliderAndMeshAngle;
-            collider.transform.localRotation = settings.ColliderAndMeshAngle;
+            mesh.transform.localPosition = settings.MeshTransform.Position;
+            mesh.transform.localEulerAngles = settings.MeshTransform.Rotation;
+            mesh.transform.localScale = settings.MeshTransform.Scale;
 
             FireWeapon.transform.localPosition = new Vector3(0f, 1.52f, -0.88f); //Pos. of weapons in game
             return weapon;
         }
-
-        public static string GetPrefabNameFromType(ProjectileType type)
-        {
-            string name = "";
-            switch (type)
-            {
-                case ProjectileType.Bullet_Big:
-                    name = "Bullet_Big";
-                    break;
-                case ProjectileType.Bullet_Bigger:
-                    name = "Bullet_Bigger";
-                    break;
-                case ProjectileType.Bullet_DoubleBarrel:
-                    name = "Bullet_DoubleBarrel";
-                    break;
-                case ProjectileType.Bullet_Evil:
-                    name = "Bullet_Evil";
-                    break;
-                case ProjectileType.Bullet_Fall:
-                    name = "Bullet_Fall";
-                    break;
-                case ProjectileType.Bullet_Grabber:
-                    name = "Bullet_Grabber";
-                    break;
-                case ProjectileType.Bullet_KnockBack:
-                    name = "Bullet_KnockBack";
-                    break;
-                case ProjectileType.Bullet_Musket:
-                    name = "Bullet_Musket";
-                    break;
-                case ProjectileType.Bullet_Musket2:
-                    name = "Bullet_Musket2";
-                    break;
-                case ProjectileType.Bullet_Small:
-                    name = "Bullet_Small";
-                    break;
-                case ProjectileType.Bullet_Sniper:
-                    name = "Bullet_Sniper";
-                    break;
-                case ProjectileType.Bullet_SniperBig:
-                    name = "Bullet_SniperBig";
-                    break;
-                case ProjectileType.Bullet_SquareBrawl:
-                    name = "Bullet_SquareBrawl";
-                    break;
-                default:
-                    break;
-            }
-            return name;
-        }
     }
+    
 
     public struct FireWeaponSettings
     {
@@ -165,39 +126,57 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
         public Vector3 ForceShake;
         public float ForceShakeTime;
 
-        public ProjectileType WeaponProjectileType;
-        public string CustomProjectileResourceName;
+        public string WeaponProjectile;
 
         public Vector3 ADS_Position;
-        public Vector3 WeaponRightHand_Position;
+        public Vector3 ADS_Rotation;
         public Vector3 FirePoint_Position;
+        public Vector3 FirePoint_Rotation;
+
+        public Vector3 WeaponRightHand_Position;
 
         public bool IsTwoHandedWeapon;
         public Vector3 WeaponLeftHand_Position;
-
-        public Vector3 BoxColliderSize;
-        public Quaternion ColliderAndMeshAngle;
+        
+        public TransformSettings[] BoxColliders;
+        public TransformSettings MeshTransform;
 
         public float NoiseInterval;
         public float NoiseLoudness;
         public float NoiseHearableDistance;
     }
-    public enum ProjectileType : int
+    public struct TransformSettings
     {
-        Bullet_Big,
-        Bullet_Bigger,
-        Bullet_DoubleBarrel,
-        Bullet_Evil,
-        Bullet_Fall,
-        Bullet_Grabber,
-        Bullet_KnockBack,
-        Bullet_Musket,
-        Bullet_Musket2,
-        Bullet_Small,
-        Bullet_Sniper,
-        Bullet_SniperBig,
-        Bullet_SquareBrawl,
+        public Vector3 Position;
+        public Vector3 Rotation;
+        public Vector3 Scale;
 
-        CustomBullet
+        public TransformSettings(Vector3 position, Vector3 rotation, Vector3 scale)
+        {
+            Position = position;
+            Rotation = rotation;
+            Scale = scale;
+        }
+    }
+
+    public class ProjectileTypes
+    {
+        public static readonly string Bullet_Small = "Bullet_Small";
+        public static readonly string Bullet_Big = "Bullet_Big";
+        public static readonly string Bullet_Bigger = "Bullet_Bigger";
+
+        public static readonly string Bullet_Sniper = "Bullet_Sniper";
+        public static readonly string Bullet_SniperBig = "Bullet_SniperBig";
+        
+        public static readonly string Bullet_DoubleBarrel = "Bullet_DoubleBarrel";
+        public static readonly string Bullet_SquareBrawl = "Bullet_SquareBrawl";
+
+        public static readonly string Bullet_Musket = "Bullet_Musket";
+        public static readonly string Bullet_Musket2 = "Bullet_Musket2";
+
+        public static readonly string Bullet_Evil = "Bullet_Evil";
+        public static readonly string Bullet_Fall = "Bullet_Fall";
+        public static readonly string Bullet_Grabber = "Bullet_Grabber";
+        public static readonly string Bullet_KnockBack = "Bullet_KnockBack";
     }
 }
