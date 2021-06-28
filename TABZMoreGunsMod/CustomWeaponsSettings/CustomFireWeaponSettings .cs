@@ -69,6 +69,15 @@ namespace TABZMoreGunsMod
                 transformSettings[i] = new TransformSettings(BoxCollidersPosition[i], BoxCollidersRotation[i], BoxCollidersScale[i]);
             return transformSettings;
         }
+        public SoundEventsManager.WeaponSoundWrapper ToWeaponSoundWrapper()
+        {
+            return new SoundEventsManager.WeaponSoundWrapper()
+            {
+                WeaponEvent = WeaponEvent,
+                HitEvent = HitEvent,
+                ReloadEvent = ReloadEvent
+            };
+        }
 
         public FireWeaponSettings ToFireWeaponSettings()
         {
@@ -90,7 +99,6 @@ namespace TABZMoreGunsMod
                 ReloadTime = ReloadTime,
                 Recoil = Recoil,
                 AngularRecoil = AngularRecoil,
-
                 ForceShake = ForceShake,
                 ForceShakeTime = ForceShakeTime,
 

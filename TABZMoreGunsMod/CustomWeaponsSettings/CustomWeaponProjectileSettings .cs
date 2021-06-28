@@ -9,6 +9,7 @@ namespace TABZMoreGunsMod
     [Serializable]
     public struct CustomWeaponProjectileSettings
     {
+        public string Name;
         public string ProjectilyTypeToBeBasedOn;
 
         public float Damage;

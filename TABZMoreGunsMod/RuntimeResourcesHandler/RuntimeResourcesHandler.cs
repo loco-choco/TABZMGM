@@ -52,6 +52,9 @@ namespace TABZMoreGunsMod.RuntimeResources
 
         public static Mesh GetMeshResource(string fileName)
         {
+            if (string.IsNullOrEmpty(fileName))
+                return null;
+
             if (RuntimeOtherResources.ContainsKey(fileName))
             {
                 Debug.Log(string.Format("A Mesh with from the file {0} already exists, won't create new", fileName));
@@ -71,6 +74,8 @@ namespace TABZMoreGunsMod.RuntimeResources
         }
         public static Texture2D GetTexture2DResource(string fileName)
         {
+            if (string.IsNullOrEmpty(fileName))
+                return null;
             if (RuntimeOtherResources.ContainsKey(fileName))
             {
                 Debug.Log(string.Format("A Mesh with from the file {0} already exists, won't create new", fileName));

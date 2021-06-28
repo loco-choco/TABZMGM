@@ -30,6 +30,7 @@ namespace TABZMoreGunsMod.WeaponHandlerEditingHandler
             Debug.Log("Loading Custom Weapons");
             var weaponsToAdd = WeaponHandlerEditingHelper.weaponsToAdd;
             var weaponsWrappers = new WeaponHandler.WeaponWrapper[weaponsToAdd.Count];
+            Debug.Log("Loading Single Custom Weapons");
             for (int i = 0; i < weaponsWrappers.Length; i++)
             {
                 try

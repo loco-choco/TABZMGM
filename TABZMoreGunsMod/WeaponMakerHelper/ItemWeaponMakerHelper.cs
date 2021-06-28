@@ -18,19 +18,15 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
         public static InventoryItemWeapon MakeItemWeapon(ItemWeaponSettings settings)
         {
             GameObject NewItem = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
             NewItem.GetComponent<MeshFilter>().mesh = settings.ItemMesh;
             NewItem.GetComponent<MeshRenderer>().material = settings.ItemMaterial;
-
             NewItem.name = settings.DisplayName+"Item";
             NewItem.layer = LayerMask.NameToLayer("Item");
-
             NewItem.AddComponent<PhotonView>();
             InventoryItemWeapon itemComponent = NewItem.AddComponent<InventoryItemWeapon>();
 
             InventoryItemEditing.DisplayNameRef(itemComponent) = settings.DisplayName;
             InventoryItemEditing.FlavourTextRef(itemComponent) = settings.FavourText;
-
             InventoryItemEditing.ItemIconRef(itemComponent) = Sprite.Create(settings.ItemIcon, new Rect(0.0f, 0.0f, settings.ItemIcon.width, settings.ItemIcon.height), new Vector2(0.5f, 0.5f), 100.0f);
 
             InventoryItemEditing.ItemTypeRef(itemComponent) = InventoryService.ItemType.WEAPON;

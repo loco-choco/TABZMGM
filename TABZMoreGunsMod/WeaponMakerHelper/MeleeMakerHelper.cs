@@ -44,8 +44,8 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             if (settings.IsTwoHandedWeapon)
             {
                 GameObject weaponLeftHand = new GameObject("WeaponLeftHand", typeof(WeaponLeftHandTag));
-                weaponRightHand.transform.parent = MeleeWeapon.transform;
-                weaponRightHand.transform.localPosition = settings.WeaponLeftHand_Position;
+                weaponLeftHand.transform.parent = MeleeWeapon.transform;
+                weaponLeftHand.transform.localPosition = settings.WeaponLeftHand_Position;
             }
 
 

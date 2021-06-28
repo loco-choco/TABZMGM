@@ -2,6 +2,7 @@
 using System.IO;
 using TABZMoreGunsMod.WeaponMakerHelper;
 using TABZMoreGunsMod.RuntimeResources;
+using TABZMoreGunsMod.WeaponHandlerEditingHandler;
 using UnityEngine;
 
 namespace TABZMoreGunsMod
@@ -25,8 +26,7 @@ namespace TABZMoreGunsMod
         public Vector3 WeaponRightHand_Position;
         public bool IsTwoHandedWeapon;
         public Vector3 WeaponLeftHand_Position;
-
-        public float FOV;
+        
         public Vector4[] PunchCurve;
         public float PunchForce;
         public float PunchTime;
@@ -68,6 +68,16 @@ namespace TABZMoreGunsMod
             return transformSettings;
         }
 
+        public SoundEventsManager.WeaponSoundWrapper ToWeaponSoundWrapper()
+        {
+            return new SoundEventsManager.WeaponSoundWrapper()
+            {
+                WeaponEvent = WeaponEvent,
+                HitEvent = HitEvent,
+                ReloadEvent = NoiseWeaponReloadEvents.GenericReload
+            };
+        }
+
         public MeleeWeaponSettings ToMeleeWeaponSettings()
         {
             return new MeleeWeaponSettings()
@@ -81,7 +91,6 @@ namespace TABZMoreGunsMod
                     mainTextureOffset = TextureOffset,
                     mainTextureScale = TextureScale
                 },
-                FOV = FOV,
                 PunchCurve = new AnimationCurve(PunchCurveInKeyFrames()),
                 PunchForce = PunchForce,
                 PunchTime = PunchTime,

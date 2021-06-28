@@ -49,18 +49,18 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             // WeaponRightHand
             GameObject weaponRightHand = new GameObject("WeaponRightHand", typeof(WeaponRightHandTag));
             weaponRightHand.transform.parent = FireWeapon.transform;
-            weaponRightHand.transform.localPosition = settings.WeaponLeftHand_Position;
+            weaponRightHand.transform.localPosition = settings.WeaponRightHand_Position;
 
             if (settings.IsTwoHandedWeapon)
             {
                 GameObject weaponLeftHand = new GameObject("WeaponLeftHand", typeof(WeaponLeftHandTag));
-                weaponRightHand.transform.parent = FireWeapon.transform;
-                weaponRightHand.transform.localPosition = settings.WeaponLeftHand_Position;
+                weaponLeftHand.transform.parent = FireWeapon.transform;
+                weaponLeftHand.transform.localPosition = settings.WeaponLeftHand_Position;
             }
+            Debug.Log("WeaponLeftHand" + FireWeapon.GetComponentsInChildren<WeaponLeftHandTag>().Length);
             
             var weapon = FireWeapon.AddComponent<Weapon>();
             weapon.fov = settings.FOV;
-
             weapon.fireRate = settings.FireRate;
             weapon.automatic = settings.Automatic;
             WeaponEditing.ReloadTimeRef(weapon) = settings.ReloadTime;

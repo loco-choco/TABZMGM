@@ -50,19 +50,27 @@
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\..\TABZ modded v5\GAME_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\TABZ modded v5\GAME_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomWeaponsSettings\CustomItemSettings.cs" />
+    <Compile Include="CustomWeaponsSettings\JsonWeaponGenerator.cs" />
+    <Compile Include="CustomWeaponsSettings\WeaponGenerator.cs" />
     <Compile Include="InventoryItemEditingHelper\FileImporting.cs" />
     <Compile Include="InventoryItemEditingHelper\InventoryItemEditingHelper.cs" />
     <Compile Include="MagicCubeTest.cs" />
     <Compile Include="MoreGunsMod.cs" />
     <Compile Include="RuntimeGeneratedWeapon.cs" />
-    <Compile Include="SerializabeStructs\CustomWeaponProjectileSettings .cs" />
-    <Compile Include="SerializabeStructs\CustomFireWeaponSettings .cs" />
-    <Compile Include="SerializabeStructs\CustomMeleeSettings.cs" />
+    <Compile Include="CustomWeaponsSettings\CustomWeaponProjectileSettings .cs" />
+    <Compile Include="CustomWeaponsSettings\CustomFireWeaponSettings .cs" />
+    <Compile Include="CustomWeaponsSettings\CustomMeleeSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RuntimeResourcesHandler\RuntimeResourcesHandler.cs" />
     <Compile Include="RuntimeResourcesHandler\RuntimeResourcesPatches.cs" />
+    <Compile Include="TABZChatPatches.cs" />
     <Compile Include="WeaponHandlerEditingHandler\WeaponHandlerEditingPatches.cs" />
     <Compile Include="WeaponHandlerEditingHandler\WeaponHandlerEditingHelper.cs" />
     <Compile Include="WeaponMakerHelper\FireWeaponMakerHelper.cs" />
