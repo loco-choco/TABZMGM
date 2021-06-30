@@ -62,7 +62,7 @@ namespace TABZMoreGunsMod.RuntimeResources
             }
             try
             {
-                Mesh mesh = new CAMOWA.ObjImporter().ImportFile(Directory.GetFiles(MoreGunsMod.GameExecutabePath, "needle.obj", SearchOption.AllDirectories)[0]);
+                Mesh mesh = new CAMOWA.ObjImporter().ImportFile(Directory.GetFiles(MoreGunsMod.GameExecutabePath, fileName, SearchOption.AllDirectories)[0]);
                 RuntimeOtherResources.Add(fileName, mesh);
                 return mesh;
             }
@@ -78,7 +78,7 @@ namespace TABZMoreGunsMod.RuntimeResources
                 return null;
             if (RuntimeOtherResources.ContainsKey(fileName))
             {
-                Debug.Log(string.Format("A Mesh with from the file {0} already exists, won't create new", fileName));
+                Debug.Log(string.Format("A Texture2D from the file {0} already exists, won't create new", fileName));
                 return (Texture2D)RuntimeOtherResources[fileName];
             }
             try
@@ -89,7 +89,7 @@ namespace TABZMoreGunsMod.RuntimeResources
             }
             catch
             {
-                Debug.Log(string.Format("Couldn't load the mesh {0}, make sure that it is inside the game folder", fileName));
+                Debug.Log(string.Format("Couldn't load the Texture2D {0}, make sure that it is inside the game folder", fileName));
                 return null;
             }
         }

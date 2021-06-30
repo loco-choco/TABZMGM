@@ -27,7 +27,7 @@ namespace TABZMoreGunsMod
                 if (text.StartsWith("m-"))
                     PhotonNetwork.Instantiate(text.TrimStart('m', '-'), NetworkManager.LocalPlayerPhotonView.gameObject.GetComponent<PhysicsAmimationController>().mainRig.position, Quaternion.identity, 0, new object[]
                     {
-                        -1
+                        200
                     });
             }
         }

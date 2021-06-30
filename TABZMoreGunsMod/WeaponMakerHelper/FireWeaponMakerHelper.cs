@@ -21,15 +21,14 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             pV.currentMasterID = -1;
             pV.synchronization = ViewSynchronization.Off;
             pV.prefixBackup = -1;
+			pV.ownershipTransfer = OwnershipOption.Fixed;
+			pV.group = 0;
             pV.onSerializeRigidBodyOption = OnSerializeRigidBody.All;
             pV.onSerializeTransformOption = OnSerializeTransform.PositionAndRotation;
-            pV.viewID = PhotonNetwork.AllocateViewID(); //Not the correct solution, but setting it to 0 isn't right either
+            pV.viewID = PhotonNetwork.AllocateViewID();
 
-            if (playerTransform.GetComponent<PhotonView>().ownerId != NetworkManager.LocalPlayerPhotonView.ownerId)
-                pV.TransferOwnership(playerTransform.GetComponent<PhotonView>().ownerId);
-
-            //NoiseSpawner
-            var noiseSpawn = FireWeapon.AddComponent<NoiseSpawner>();
+           //NoiseSpawner
+           var noiseSpawn = FireWeapon.AddComponent<NoiseSpawner>();
             WeaponEditing.NoiseLoudnessRef(noiseSpawn) = settings.NoiseLoudness;
             WeaponEditing.NoiseIntervalRef(noiseSpawn) = settings.NoiseInterval;
             WeaponEditing.NoiseDistanceRef(noiseSpawn) = settings.NoiseHearableDistance;
@@ -57,7 +56,6 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
                 weaponLeftHand.transform.parent = FireWeapon.transform;
                 weaponLeftHand.transform.localPosition = settings.WeaponLeftHand_Position;
             }
-            Debug.Log("WeaponLeftHand" + FireWeapon.GetComponentsInChildren<WeaponLeftHandTag>().Length);
             
             var weapon = FireWeapon.AddComponent<Weapon>();
             weapon.fov = settings.FOV;
@@ -86,6 +84,8 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             {
                 GameObject collider = new GameObject("Collider"+ i, typeof(BoxCollider));
                 var bxCol = collider.GetComponent<BoxCollider>();
+                collider.layer = LayerMask.NameToLayer("PlayerColliderOther");
+
                 collider.transform.parent = colliders.transform;
 
                 bxCol.transform.localPosition = settings.BoxColliders[i].Position;

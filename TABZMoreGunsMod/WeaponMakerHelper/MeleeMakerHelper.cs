@@ -20,6 +20,8 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             pV.currentMasterID = -1;
             pV.synchronization = ViewSynchronization.Off;
             pV.prefixBackup = -1;
+            pV.ownershipTransfer = OwnershipOption.Fixed;
+            pV.group = 0;
             pV.onSerializeRigidBodyOption = OnSerializeRigidBody.All;
             pV.onSerializeTransformOption = OnSerializeTransform.PositionAndRotation;
             pV.viewID = 0;
@@ -71,6 +73,7 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             {
                 GameObject collider = new GameObject("Collider" + i, typeof(BoxCollider));
                 var bxCol = collider.GetComponent<BoxCollider>();
+                collider.layer = LayerMask.NameToLayer("PlayerColliderOther");
 
                 collider.transform.parent = colliders.transform;
 

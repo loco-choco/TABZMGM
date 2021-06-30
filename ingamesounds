@@ -1,0 +1,42 @@
+In game Sounds
+
+event:/ZOMBIES/Big zombie screams
+event:/ZOMBIES/goat zombie screams
+event:/ZOMBIES/scary zombie screams
+
+event:/ZOMBIES/normal zombie screams
+event:/ZOMBIES/zombie death
+event:/ZOMBIES/zombie damage
+
+event:/PLAYER/damage
+event:/GUNS/hitsnstuff/Holster
+event:/GUNS/hitsnstuff/Raise
+event:/GUNS/hitsnstuff/Pickup
+event:/MELEE/PunchSwing
+event:/MELEE/PunchHit
+
+event:/MUSIC/MenuMusic
+event:/MUSIC/HipHop
+
+event:/GUNS/hitsnstuff/Pickup
+event:/INTERFACE/inventory click
+event:/INTERFACE/menu click
+event:/PLAYER/steps
+event:/PLAYER/ProneJump
+event:/PLAYER/PlayerTalkQuiet
+event:/PLAYER/PlayerTalkLoud
+event:/PLAYER/breath
+
+event:/AMBIENCE/Waterside Ambience
+event:/AMBIENCE/Tall Grass Ambience
+event:/AMBIENCE/Blizzard Ambience
+event:/MUSIC/LabAmbientMusic
+event:/MUSIC/EvilAmbientMusic
+event:/MUSIC/Clustertruck Music
+event:/MUSIC/Square Brawl Music
+
+event:/AMBIENCE/Stream Ambience
+event:/AMBIENCE/In House Ambience
+event:/AMBIENCE/Normal Ambience
+event:/AMBIENCE/Forest Ambience
+event:/MUSIC/NormalMusic
