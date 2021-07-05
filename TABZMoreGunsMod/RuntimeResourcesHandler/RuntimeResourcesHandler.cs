@@ -62,7 +62,7 @@ namespace TABZMoreGunsMod.RuntimeResources
             }
             try
             {
-                Mesh mesh = new CAMOWA.ObjImporter().ImportFile(Directory.GetFiles(MoreGunsMod.GameExecutabePath, fileName, SearchOption.AllDirectories)[0]);
+                Mesh mesh = new CAMOWA.ObjImporter().ImportFile(Directory.GetFiles(MoreGunsMod.DllExecutablePath, fileName, SearchOption.AllDirectories)[0]);
                 RuntimeOtherResources.Add(fileName, mesh);
                 return mesh;
             }
@@ -83,7 +83,7 @@ namespace TABZMoreGunsMod.RuntimeResources
             }
             try
             {
-                Texture2D texture2d = FileImporting.ImportImage(Directory.GetFiles(MoreGunsMod.GameExecutabePath, fileName, SearchOption.AllDirectories)[0]);
+                Texture2D texture2d = FileImporting.ImportImage(Directory.GetFiles(MoreGunsMod.DllExecutablePath, fileName, SearchOption.AllDirectories)[0]);
                 RuntimeOtherResources.Add(fileName, texture2d);
                 return texture2d;
             }

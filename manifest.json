@@ -1,3 +1,8 @@
 {
-	"fileName" : "TABZMoreGunsMod.dll"	
+	"filename" : "TABZMoreGunsMod.dll",
+	"author": "Locochoco",
+	"name": "More Guns Mod",
+	"uniqueName": "Locochoco.MGM",
+	"description": "Adds custom weapons created at runtime.",	
+	"version": "0.1",
 }

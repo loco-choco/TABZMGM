@@ -20,12 +20,12 @@ namespace TABZMoreGunsMod
         private static string gamePath;
         private static FireWeaponGenerator[] fireWeapons;
         private static MeleeWeaponGenerator[] meleeWeapons;
-        public static string GameExecutabePath
+        public static string DllExecutablePath
         {
             get
             {
                 if (string.IsNullOrEmpty(gamePath))
-                    gamePath = Application.dataPath.Remove(Application.dataPath.LastIndexOf('/'));
+                    gamePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 return gamePath;
             }
 
@@ -62,7 +62,7 @@ namespace TABZMoreGunsMod
         private static void GenerateAllRuntimeWeaponsAndStuff()
         {
             //Items
-            var ItemJsonPaths = Directory.GetFiles(GameExecutabePath, "*_ItemWeapon.json", SearchOption.AllDirectories);
+            var ItemJsonPaths = Directory.GetFiles(DllExecutablePath, "*_ItemWeapon.json", SearchOption.AllDirectories);
             for (int i = 0; i < ItemJsonPaths.Length; i++)
             {
                 try
@@ -78,7 +78,7 @@ namespace TABZMoreGunsMod
                 }
             }
             //Projectiles
-            var WeaponProjectileJsonPaths = Directory.GetFiles(GameExecutabePath, "*_WeaponProjectile.json", SearchOption.AllDirectories);
+            var WeaponProjectileJsonPaths = Directory.GetFiles(DllExecutablePath, "*_WeaponProjectile.json", SearchOption.AllDirectories);
             for (int i = 0; i < WeaponProjectileJsonPaths.Length; i++)
             {
                 try
@@ -94,24 +94,23 @@ namespace TABZMoreGunsMod
                 }
             }
             //Fire Weapons
-            var FireWeaponJsonPaths = Directory.GetFiles(GameExecutabePath, "*_FireWeapon.json", SearchOption.AllDirectories);
+            var FireWeaponJsonPaths = Directory.GetFiles(DllExecutablePath, "*_FireWeapon.json", SearchOption.AllDirectories);
             fireWeapons = new FireWeaponGenerator[FireWeaponJsonPaths.Length];
             for (int i = 0; i < FireWeaponJsonPaths.Length; i++)
             {
                 try
                 {
                     fireWeapons[i] = new FireWeaponGenerator(CustomFireWeaponSettings.FromJson(FireWeaponJsonPaths[i]));
-                    
                 }
                 catch
                 {
                     Debug.Log(string.Format("The Fire Weapon from the file {0} couldn't be read", FireWeaponJsonPaths[i]));
                 }
             }
-            //fireWeapons = fireWeapons.OrderBy(x => x.Name).ToArray();
+            fireWeapons = fireWeapons.OrderBy(x => x.Name).ToArray();
 
             //Melee Weapons
-            var MeleeWeaponJsonPaths = Directory.GetFiles(GameExecutabePath, "*_MeleeWeapon.json", SearchOption.AllDirectories);
+            var MeleeWeaponJsonPaths = Directory.GetFiles(DllExecutablePath, "*_MeleeWeapon.json", SearchOption.AllDirectories);
             meleeWeapons = new MeleeWeaponGenerator[MeleeWeaponJsonPaths.Length];
             for (int i = 0; i < MeleeWeaponJsonPaths.Length; i++)
             {
@@ -124,7 +123,7 @@ namespace TABZMoreGunsMod
                     Debug.Log(string.Format("The Melee Weapon from the file {0} couldn't be read", MeleeWeaponJsonPaths[i]));
                 }
             }
-            //meleeWeapons = meleeWeapons.OrderBy(x => x.Name).ToArray();
+            meleeWeapons = meleeWeapons.OrderBy(x => x.Name).ToArray();
         }
     }
 }

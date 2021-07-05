@@ -15,7 +15,6 @@ namespace TABZMoreGunsMod.CustomWeaponsSettings
         public FireWeaponGenerator(CustomFireWeaponSettings settings)
         {
             WeaponFireSettings = settings.ToFireWeaponSettings();
-            Debug.Log(Name);
             WeaponHandlerEditingHelper.AddWeaponToList(settings.Name, settings.ToWeaponSoundWrapper(), MakeWeapon);
         }
 
