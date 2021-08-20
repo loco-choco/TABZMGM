@@ -8,7 +8,7 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
 {
     public class MeleeMakerHelper
     {
-        public static Weapon MakeMeleeWeapon(Transform playerTransform, MeleeWeaponSettings settings)
+        public static Weapon MakeMeleeWeapon(Transform playerTransform, MeleeWeaponSettings settings, int viewID)
         {
             var MeleeWeapon = new GameObject(settings.Name); //Needs to be the same name as the DisplayName in the item
             MeleeWeapon.AddComponent<Rigidbody>().angularDrag = 0.05f;
@@ -24,9 +24,7 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             pV.group = 0;
             pV.onSerializeRigidBodyOption = OnSerializeRigidBody.All;
             pV.onSerializeTransformOption = OnSerializeTransform.PositionAndRotation;
-            pV.viewID = 0;
-
-            pV.ownerId = playerTransform.GetComponent<PhotonView>().ownerId;
+            pV.viewID = viewID;
 
             //NoiseSpawner
             var noiseSpawn = MeleeWeapon.AddComponent<NoiseSpawner>();
@@ -96,7 +94,7 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             MeleeWeapon.transform.localPosition = new Vector3(0f, 1.52f, -0.88f); //Pos. of weapons in game
 
             return weapon;
-        }       
+        }
     }
 
     public struct MeleeWeaponSettings

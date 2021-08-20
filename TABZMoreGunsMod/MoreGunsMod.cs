@@ -39,10 +39,10 @@ namespace TABZMoreGunsMod
                 var harmonyInstance = new Harmony("com.ivan.MoreGunsMod");
                 try
                 {
+                    HasThePatchesHappened = true;
                     ResourceHandlerPatches.Patches(harmonyInstance);
                     WeaponHandlerEditingPatches.Patches(harmonyInstance);
                     TABZChatPatches.Patches(harmonyInstance);
-                    HasThePatchesHappened = true;
 
                     AccessTools.StaticFieldRefAccess<string>(typeof(MainMenuHandler), "mVersionString") = "TABZ v1.21-MagicCubeTest";
                     PhotonNetwork.Disconnect();
@@ -55,10 +55,9 @@ namespace TABZMoreGunsMod
                     Debug.Log(string.Format("Exception in {0} : {1}", ex.Source, ex.Message));
                 }
             }
-            if (Application.loadedLevel == 1)
+            if (SceneManagerHelper.ActiveSceneBuildIndex == 1)
                 WeaponHandlerEditingPatches.loadedCustomSounds = false;
         }
-
         private static void GenerateAllRuntimeWeaponsAndStuff()
         {
             //Items

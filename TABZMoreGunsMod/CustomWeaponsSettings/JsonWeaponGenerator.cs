@@ -18,11 +18,11 @@ namespace TABZMoreGunsMod.CustomWeaponsSettings
             WeaponHandlerEditingHelper.AddWeaponToList(settings.Name, settings.ToWeaponSoundWrapper(), MakeWeapon);
         }
 
-       public Weapon MakeWeapon(Transform playerTransform)
+       public Weapon MakeWeapon(Transform playerTransform, int viewID)
         {
             try
             {
-                return FireWeaponMakerHelper.MakeFireWeapon(playerTransform, WeaponFireSettings);
+                return FireWeaponMakerHelper.MakeFireWeapon(playerTransform, WeaponFireSettings, viewID);
             }
             catch (Exception ex)
             {
@@ -45,11 +45,11 @@ namespace TABZMoreGunsMod.CustomWeaponsSettings
             WeaponMeleeSettings = settings.ToMeleeWeaponSettings();
             WeaponHandlerEditingHelper.AddWeaponToList(settings.Name, settings.ToWeaponSoundWrapper(), MakeWeapon);
         }
-        public Weapon MakeWeapon(Transform playerTransform)
+        public Weapon MakeWeapon(Transform playerTransform, int viewID)
         {
             try
             {
-                return MeleeMakerHelper.MakeMeleeWeapon(playerTransform, WeaponMeleeSettings);
+                return MeleeMakerHelper.MakeMeleeWeapon(playerTransform, WeaponMeleeSettings, viewID);
             }
             catch (Exception ex)
             {

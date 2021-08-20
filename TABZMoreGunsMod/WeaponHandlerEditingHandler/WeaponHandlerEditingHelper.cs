@@ -9,7 +9,7 @@ namespace TABZMoreGunsMod.WeaponHandlerEditingHandler
     public class WeaponHandlerEditingHelper
     {
         static public List<WeaponWeapperResourcesNames> weaponsToAdd = new List<WeaponWeapperResourcesNames>();
-        static public void AddWeaponToList(string WeaponName,SoundEventsManager.WeaponSoundWrapper WeaponSounds, WeaponSpawner WeaponSpawningMethod)
+        static public void AddWeaponToList(string WeaponName, SoundEventsManager.WeaponSoundWrapper WeaponSounds, WeaponSpawner WeaponSpawningMethod)
         {
             var itemExampleHolder = new GameObject(WeaponName).AddComponent<InventoryItemWeapon>();
             itemExampleHolder.gameObject.SetActive(false);
@@ -29,7 +29,7 @@ namespace TABZMoreGunsMod.WeaponHandlerEditingHandler
             SoundEventsManager soundEventsManager = UnityEngine.Object.FindObjectOfType<SoundEventsManager>();
 
             var weaponsToAdd = WeaponHandlerEditingHelper.weaponsToAdd;
-            var weaponsSoundsWrappers = new  SoundEventsManager.WeaponSound[weaponsToAdd.Count];
+            var weaponsSoundsWrappers = new SoundEventsManager.WeaponSound[weaponsToAdd.Count];
             for (int i = 0; i < weaponsSoundsWrappers.Length; i++)
             {
                 try
@@ -47,9 +47,9 @@ namespace TABZMoreGunsMod.WeaponHandlerEditingHandler
                     Debug.Log(string.Format("Couldn't add the weapon's sounds from the item {0}", weaponsToAdd[i].Item.DisplayName));
                 }
             }
-            var managerSoundsList =  AccessTools.FieldRefAccess<SoundEventsManager, SoundEventsManager.WeaponSound[]>(soundEventsManager, "m_Weapons");
+            var managerSoundsList = AccessTools.FieldRefAccess<SoundEventsManager, SoundEventsManager.WeaponSound[]>(soundEventsManager, "m_Weapons");
             AccessTools.FieldRefAccess<SoundEventsManager, SoundEventsManager.WeaponSound[]>(soundEventsManager, "m_Weapons") = managerSoundsList.AddRangeToArray(weaponsSoundsWrappers);
-            
+
             Debug.Log("Customs weapons sounds loaded");
         }
 
@@ -60,7 +60,7 @@ namespace TABZMoreGunsMod.WeaponHandlerEditingHandler
             public SoundEventsManager.WeaponSoundWrapper WeaponSounds;
         }
 
-        public delegate Weapon WeaponSpawner(Transform playerTransform);
+        public delegate Weapon WeaponSpawner(Transform playerTransform, int viewID);
     }
 
 

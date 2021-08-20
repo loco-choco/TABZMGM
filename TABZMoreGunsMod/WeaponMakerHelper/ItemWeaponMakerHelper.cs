@@ -20,9 +20,10 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             GameObject NewItem = GameObject.CreatePrimitive(PrimitiveType.Cube);
             NewItem.GetComponent<MeshFilter>().mesh = settings.ItemMesh;
             NewItem.GetComponent<MeshRenderer>().material = settings.ItemMaterial;
-            NewItem.name = settings.DisplayName+"Item";
+            NewItem.name = settings.DisplayName + "Item";
             NewItem.layer = LayerMask.NameToLayer("Item");
             NewItem.AddComponent<PhotonView>();
+            NewItem.AddComponent<ReportIfDestroyed>();
             InventoryItemWeapon itemComponent = NewItem.AddComponent<InventoryItemWeapon>();
 
             InventoryItemEditing.DisplayNameRef(itemComponent) = settings.DisplayName;
@@ -34,6 +35,13 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             itemComponent.BulletsInMagazine = settings.BulletsInMagazine;
 
             return itemComponent;
+        }
+    }
+    public class ReportIfDestroyed : MonoBehaviour
+    {
+        void OnDestroy()
+        {
+            Debug.Log(transform.name + " got destroyed");
         }
     }
     public struct ItemWeaponSettings

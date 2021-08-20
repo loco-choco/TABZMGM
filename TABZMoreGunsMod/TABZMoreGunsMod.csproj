@@ -73,6 +73,7 @@
     <Compile Include="TABZChatPatches.cs" />
     <Compile Include="WeaponHandlerEditingHandler\WeaponHandlerEditingPatches.cs" />
     <Compile Include="WeaponHandlerEditingHandler\WeaponHandlerEditingHelper.cs" />
+    <Compile Include="WeaponHandlerEditingHandler\WeaponViewIdTransmitter.cs" />
     <Compile Include="WeaponMakerHelper\FireWeaponMakerHelper.cs" />
     <Compile Include="WeaponMakerHelper\MeleeMakerHelper.cs" />
     <Compile Include="WeaponMakerHelper\ItemWeaponMakerHelper.cs" />

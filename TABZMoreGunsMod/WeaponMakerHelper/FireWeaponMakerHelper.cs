@@ -9,7 +9,7 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
     public class FireWeaponMakerHelper
     {
 
-        public static Weapon MakeFireWeapon(Transform playerTransform, FireWeaponSettings settings)
+        public static Weapon MakeFireWeapon(Transform playerTransform, FireWeaponSettings settings, int viewID)
         {
             var FireWeapon = new GameObject(settings.Name); //Needs to be the same name as the DisplayName in the item
             FireWeapon.AddComponent<Rigidbody>().angularDrag = 0.05f;
@@ -21,14 +21,14 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             pV.currentMasterID = -1;
             pV.synchronization = ViewSynchronization.Off;
             pV.prefixBackup = -1;
-			pV.ownershipTransfer = OwnershipOption.Fixed;
-			pV.group = 0;
+            pV.ownershipTransfer = OwnershipOption.Fixed;
+            pV.group = 0;
             pV.onSerializeRigidBodyOption = OnSerializeRigidBody.All;
             pV.onSerializeTransformOption = OnSerializeTransform.PositionAndRotation;
-            pV.viewID = PhotonNetwork.AllocateViewID();
+            pV.viewID = viewID;
 
-           //NoiseSpawner
-           var noiseSpawn = FireWeapon.AddComponent<NoiseSpawner>();
+            //NoiseSpawner
+            var noiseSpawn = FireWeapon.AddComponent<NoiseSpawner>();
             WeaponEditing.NoiseLoudnessRef(noiseSpawn) = settings.NoiseLoudness;
             WeaponEditing.NoiseIntervalRef(noiseSpawn) = settings.NoiseInterval;
             WeaponEditing.NoiseDistanceRef(noiseSpawn) = settings.NoiseHearableDistance;
@@ -56,7 +56,7 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
                 weaponLeftHand.transform.parent = FireWeapon.transform;
                 weaponLeftHand.transform.localPosition = settings.WeaponLeftHand_Position;
             }
-            
+
             var weapon = FireWeapon.AddComponent<Weapon>();
             weapon.fov = settings.FOV;
             weapon.fireRate = settings.FireRate;
@@ -68,10 +68,10 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             weapon.angularRecoil = settings.AngularRecoil;
             weapon.forceShake = settings.ForceShake;
             weapon.forceShakeTime = settings.ForceShakeTime;
-            
+
             weapon.projectile = RuntimeResources.RuntimeResourcesHandler.InstantiateGameObject(settings.WeaponProjectile);
 
-            if(settings.IsTwoHandedWeapon)
+            if (settings.IsTwoHandedWeapon)
                 weapon.aimTarget = playerTransform.Find("CameraHolder/CameraRot/CameraForce/Aims/Rifle");
             else
                 weapon.aimTarget = playerTransform.Find("CameraHolder/CameraRot/CameraForce/Aims/Pistol");
@@ -82,7 +82,7 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             colliders.transform.parent = FireWeapon.transform;
             for (int i = 0; i < settings.BoxColliders.Length; i++)
             {
-                GameObject collider = new GameObject("Collider"+ i, typeof(BoxCollider));
+                GameObject collider = new GameObject("Collider" + i, typeof(BoxCollider));
                 var bxCol = collider.GetComponent<BoxCollider>();
                 collider.layer = LayerMask.NameToLayer("PlayerColliderOther");
 
@@ -107,7 +107,7 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             return weapon;
         }
     }
-    
+
 
     public struct FireWeaponSettings
     {
@@ -137,7 +137,7 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
 
         public bool IsTwoHandedWeapon;
         public Vector3 WeaponLeftHand_Position;
-        
+
         public TransformSettings[] BoxColliders;
         public TransformSettings MeshTransform;
 
@@ -167,7 +167,7 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
 
         public static readonly string Bullet_Sniper = "Bullet_Sniper";
         public static readonly string Bullet_SniperBig = "Bullet_SniperBig";
-        
+
         public static readonly string Bullet_DoubleBarrel = "Bullet_DoubleBarrel";
         public static readonly string Bullet_SquareBrawl = "Bullet_SquareBrawl";
 
