@@ -9,7 +9,7 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
     public class FireWeaponMakerHelper
     {
 
-        public static Weapon MakeFireWeapon(Transform playerTransform, FireWeaponSettings settings, int viewID)
+        public static Weapon MakeFireWeapon(Transform playerTransform, FireWeaponSettings settings, int ownerID)
         {
             var FireWeapon = new GameObject(settings.Name); //Needs to be the same name as the DisplayName in the item
             FireWeapon.AddComponent<Rigidbody>().angularDrag = 0.05f;
@@ -25,7 +25,7 @@ namespace TABZMoreGunsMod.WeaponMakerHelper
             pV.group = 0;
             pV.onSerializeRigidBodyOption = OnSerializeRigidBody.All;
             pV.onSerializeTransformOption = OnSerializeTransform.PositionAndRotation;
-            pV.viewID = viewID;
+            pV.ownerId = ownerID;
 
             //NoiseSpawner
             var noiseSpawn = FireWeapon.AddComponent<NoiseSpawner>();

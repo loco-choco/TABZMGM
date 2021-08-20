@@ -60,7 +60,7 @@ namespace TABZMoreGunsMod.WeaponHandlerEditingHandler
             public SoundEventsManager.WeaponSoundWrapper WeaponSounds;
         }
 
-        public delegate Weapon WeaponSpawner(Transform playerTransform, int viewID);
+        public delegate Weapon WeaponSpawner(Transform playerTransform, int ownerID);
     }
 
 
